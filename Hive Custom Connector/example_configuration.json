@@ -1,0 +1,17 @@
+{
+    "TIDB_HOST":"",
+    "TIDB_USER":"",
+    "TIDB_PASS":"",
+    "TIDB_PORT":"",
+    "TIDB_DATABASE":"",
+    "TABLES_PRIMARY_KEY_COLUMNS": {
+        "table1":"txn_id",
+        "table2":"user_id"
+    },
+    "VECTOR_TABLES_DATA": {
+        "table1": {
+            "primary_key_column": "",
+            "vector_column": ""
+        }
+    }
+}

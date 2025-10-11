@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Raw data from source systems"
+    schema: tidb_connector2
+    tables:
+      - name: transaction_embeddings
+        description: "Source table with JSON embedding column"
+        columns:
+          - name: txn_id
+            description: "Transaction ID"
+          - name: embedding
+            description: "JSON array of float values"
