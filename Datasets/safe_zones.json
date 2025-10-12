@@ -1,0 +1,86 @@
+[
+  {
+    "patient_id": "2022484408",
+    "center_lat": 19.085934283060226,
+    "center_long": 72.87493471397659,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "2026352035",
+    "center_lat": 19.098953770762016,
+    "center_long": 72.91816059712816,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "2347167796",
+    "center_lat": 19.091316932505535,
+    "center_long": 72.89301726086101,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "4020332650",
+    "center_lat": 19.13758425631015,
+    "center_long": 72.92304869458306,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "4558609924",
+    "center_lat": 19.1066105122813,
+    "center_long": 72.92855120087172,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "5553957443",
+    "center_lat": 19.11673164614375,
+    "center_long": 72.9183854049286,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "5577150313",
+    "center_lat": 19.14083924543132,
+    "center_long": 72.89943439510685,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "6117666160",
+    "center_lat": 19.11150164334974,
+    "center_long": 72.93645424941518,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "6391747486",
+    "center_lat": 19.13574337759331,
+    "center_long": 72.9639849466519,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "6775888955",
+    "center_lat": 19.147839518489576,
+    "center_long": 72.9394539259733,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "6962181067",
+    "center_lat": 19.205312975378433,
+    "center_long": 72.97318447399027,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "7007744171",
+    "center_lat": 19.18735056409376,
+    "center_long": 72.95920503627573,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "8792009665",
+    "center_lat": 19.1851123455095,
+    "center_long": 72.9999184517942,
+    "radius_meters": 300
+  },
+  {
+    "patient_id": "8877689391",
+    "center_lat": 19.182980128451554,
+    "center_long": 73.0152139603669,
+    "radius_meters": 300
+  }
+]
