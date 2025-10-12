@@ -1,7 +1,12 @@
 {{ config(
     materialized='incremental',
     unique_key='txn_id',
-    incremental_strategy='merge'
+    incremental_strategy='merge',
+    post_hook=[
+      "CREATE VECTOR INDEX IF NOT EXISTS embedding_vector_index ON `Embeddings_Dataset`.`transactions_vector_embeddings`(embedding) OPTIONS(index_type = 'IVF', distance_type = 'COSINE');",
+
+      "ALTER VECTOR INDEX IF EXISTS embedding_vector_index ON `Embeddings_Dataset`.`transactions_vector_embeddings` REBUILD;"
+    ]
 ) }}
 
 select
