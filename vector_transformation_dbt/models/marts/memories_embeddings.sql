@@ -1,16 +1,7 @@
 {{ config(
     materialized='incremental',
     unique_key='memory_id',
-    incremental_strategy='merge',
-    post_hook=[
-      "CREATE VECTOR INDEX IF NOT EXISTS text_embedding_vector_index ON `Alzora_Embeddings_Dataset`.`memories_embeddings`(text_embedding) OPTIONS(index_type = 'IVF', distance_type = 'COSINE');",
-
-      "CREATE VECTOR INDEX IF NOT EXISTS image_embedding_vector_index ON `Alzora_Embeddings_Dataset`.`memories_embeddings`(image_embedding) OPTIONS(index_type = 'IVF', distance_type = 'COSINE');",
-
-      "ALTER VECTOR INDEX IF EXISTS text_embedding_vector_index ON `Alzora_Embeddings_Dataset`.`memories_embeddings` REBUILD;",
-
-      "ALTER VECTOR INDEX IF EXISTS image_embedding_vector_index ON `Alzora_Embeddings_Dataset`.`memories_embeddings` REBUILD;"
-    ]
+    incremental_strategy='merge'
 ) }}
 
 select
