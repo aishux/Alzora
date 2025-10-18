@@ -32,9 +32,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   vector_transformation_dbt:
     staging:
-      +schema: tidb_connector2
+      +schema: alzora_datawarehouse
       +materialized: view
     marts:
       +materialized: incremental
       +incremental_strategy: merge
-      +unique_key: txn_id
+      +unique_key: memory_id

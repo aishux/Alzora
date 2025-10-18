@@ -1,3 +1,5 @@
-venv
+.venv
 logs
 test
+Datasets/MRI_Dataset
+.env

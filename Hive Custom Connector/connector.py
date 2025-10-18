@@ -20,7 +20,7 @@ def schema(configuration: dict):
     
     schema_list = []
 
-    tables_and_primary_key_columns = configuration["TABLES_PRIMARY_KEY_COLUMNS"]
+    tables_and_primary_key_columns = json.loads(configuration["TABLES_PRIMARY_KEY_COLUMNS"])
 
     for table_name, primary_key_column in tables_and_primary_key_columns.items():
         # Add a simple table entry for each configured table + its primary key
@@ -30,7 +30,7 @@ def schema(configuration: dict):
     # and include a typed column (JSON) for the vector payload so Fivetran will
     # treat it as structured JSON on destination (e.g. BigQuery JSON column).
     if configuration.get("VECTOR_TABLES_DATA"):
-        vector_tables_data = configuration["VECTOR_TABLES_DATA"]
+        vector_tables_data = json.loads(configuration["VECTOR_TABLES_DATA"])
         for table_name, table_data in vector_tables_data.items():
             schema_list.append({
                 "table": table_name,
@@ -121,7 +121,7 @@ def process_row(row_data, table_name, configuration, is_vector_table):
 
     # If this is a configured vector table, parse the embedding column
     if is_vector_table:
-        embedding_column = configuration[table_name]["vector_column"]
+        embedding_column = json.loads(configuration["VECTOR_TABLES_DATA"])[table_name]["vector_column"]
         raw_embeddings = row_data.get(embedding_column)
         emb_list = parse_embedding_string_to_list(raw_embeddings)
         if emb_list is not None:
@@ -197,7 +197,7 @@ def update(configuration: dict, state: dict):
     connection = create_tidb_connection(configuration=configuration)
 
     # Read list of tables from configuration. Expect a dict mapping table->pk
-    tables = configuration["TABLES_PRIMARY_KEY_COLUMNS"].keys()
+    tables = json.loads(configuration["TABLES_PRIMARY_KEY_COLUMNS"]).keys()
 
     # Iterate the non-vector tables first
     for table_name in tables:
@@ -206,7 +206,7 @@ def update(configuration: dict, state: dict):
     # Process optional vector tables
     if configuration.get("VECTOR_TABLES_DATA"):
 
-        vector_tables = configuration["VECTOR_TABLES_DATA"].keys()
+        vector_tables = json.loads(configuration["VECTOR_TABLES_DATA"]).keys()
 
         for table_name in vector_tables:
             fetch_and_upsert_data(cursor=connection, table_name=table_name, state=state, configuration=configuration, is_vector_table=True)

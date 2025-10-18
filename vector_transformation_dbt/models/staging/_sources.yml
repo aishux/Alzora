@@ -3,12 +3,14 @@ version: 2
 sources:
   - name: raw_data
     description: "Raw data from source systems"
-    schema: tidb_connector2
+    schema: alzora_datawarehouse
     tables:
-      - name: transaction_embeddings
+      - name: memories
         description: "Source table with JSON embedding column"
         columns:
-          - name: txn_id
-            description: "Transaction ID"
-          - name: embedding
-            description: "JSON array of float values"
+          - name: memory_id
+            description: "Memory ID"
+          - name: text_embedding
+            description: "JSON array of text float values"
+          - name: image_embedding
+            description: "JSON array of image float values"

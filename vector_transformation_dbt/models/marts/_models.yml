@@ -1,15 +1,23 @@
 version: 2
 
 models:
-  - name: transactions_vector_embeddings
+  - name: memories_embeddings
     description: "Transformed table with embeddings as ARRAY<FLOAT64>"
     columns:
-      - name: txn_id
-        description: "Transaction ID - Primary Key"
+      - name: memory_id
+        description: "Memory Id - Primary Key"
         tests:
           - unique
           - not_null
-      - name: embedding
+      - name: text_embedding
+        description: "Embedding vector as ARRAY<FLOAT64>"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+              where: "array_length(embedding) > 0"
+      - name: image_embedding
         description: "Embedding vector as ARRAY<FLOAT64>"
         tests:
           - not_null
