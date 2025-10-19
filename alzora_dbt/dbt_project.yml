@@ -2,11 +2,11 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'safe_zone_alerts_dbt'
+name: 'alzora_dbt'
 version: '1.0.0'
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'safe_zone_alerts_dbt'
+profile: 'alzora_dbt'
 
 # These configurations specify where dbt should look for different types of files.
 # The `model-paths` config, for example, states that models in this project can be
@@ -30,9 +30,32 @@ clean-targets:         # directories to be removed by `dbt clean`
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
 models:
-  safe_zone_alerts_dbt:
-    marts:
+  alzora_dbt:
+    # vector transformation models (keeps original config)
+    vector_transformation:
+      +schema: alzora_datawarehouse
       +materialized: view
-      alerts_incremental:
+      +tags: ['vector_transformation']
+      staging:
+        +materialized: view
+      marts:
         +materialized: incremental
-        +unique_key: ["patient_id","event_ts"]
+        +incremental_strategy: merge
+        +unique_key: memory_id
+
+    # safe zone alerts models
+    safe_zone_alerts:
+      +schema: alzora_safezone_alerts     # choose schema/dataset for alerts
+      +tags: ['safe_zone_alerts']
+      staging:
+        +materialized: view
+      marts:
+        latest_vitals:
+          +materialized: view
+        breaches:
+          +materialized: view
+        alerts_incremental:
+          +materialized: incremental
+          +unique_key: ['patient_id','event_ts']   # use compound unique key or a flat hash
+          +partition_by: {"field": "created_at", "data_type": "timestamp"}
+          +cluster_by: ["patient_id"]
