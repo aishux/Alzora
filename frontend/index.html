@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alzora - Home</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<body>
+<header>
+    <div class="banner">Because Every Patient Deserves Free Care.</div>
+    <nav>
+          
+        <div id="logo">
+            <img src="images/logo.png" alt="Alzora AI Logo" width="140" height="132">
+        </div>
+        <ul class="navigation-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="add-patient.html">Add Patient </a></li>
+            <li><a href="chat.html">Alzora Agent</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+        <div id="utility">
+            <a href="login.html" class="tooltip">
+              <span class="material-symbols-outlined">logout</span>
+              <span class="tooltip-text">Logout</span>
+            </a>
+        </div>          
+    </nav>
+</header>
+<section class="hero">
+    <h1>Compassion Meets AI, Alzheimer's Care for All.</h1>
+    <div class="btn-group">
+        <button class="btn-filled-dark" onclick="window.location.href='chat.html'">
+            <span class="material-symbols-outlined">explore</span> Try Now
+          </button>          
+            <button class="btn-outline-dark btn-hover-color" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
+                <span class="material-symbols-outlined">search</span> Learn More
+              </button>
+              
+    </div>
+
+</section>
+<!-- A Deeper Look Section -->
+<section class="px-8 py-16 text-center">
+    <h2 class="text-3xl font-bold mb-4">A Deeper Look</h2>
+    <p class="text-gray-600 max-w-3xl mx-auto mb-12">
+        At Alzora AI, we believe every mind deserves more than just treatment — it deserves understanding, empathy, and a chance to live with dignity. Alzheimer’s may silence words, but through early detection and intelligent insights, we help you listen to what the mind can’t express. With every analysis, every alert, and every answer from our AI, we’re here to bring families peace of mind and give patients the care and comfort they truly deserve.
+    </p>
+    
+    
+    <div class="grid md:grid-cols-3 gap-12">
+    <!-- Data Collection -->
+    <div class="flex flex-col items-center" style="margin-top: -190px;">
+        <div class="card-image"><img src="images/folder.png" style="width:250px; height:200px; display:block; margin-bottom:-200px;"></div>
+    <h3 class="text-xl font-bold mb-2">1. Smart Monitoring</h3>
+    <p class="text-gray-600">
+        Track vitals like activity, heart rate, and sleep through connected watches and easy inputs.
+    </p>
+    </div>
+    
+    
+    <!-- Veterinary Labeling -->
+    <div class="flex flex-col items-center" style="margin-top: -190px;">
+        <div class="card-image"><img src="images/robot.png" style="width:250px; height:200px; display:block; margin-bottom:-200px;"></div>
+    <h3 class="text-xl font-bold mb-2">2. Expert Insights</h3>
+    <p class="text-gray-600">
+        Our AI is trained on Alzheimer's datasets which provides accurate and trustworthy patient health answers.
+    </p>
+    </div>
+    
+    
+    <!-- Continuous Learning -->
+    <div class="flex flex-col items-center" style="margin-top: -190px;">
+        <div class="card-image"><img src="images/graph.png" style="width:250px; height:200px; display:block; margin-bottom:-200px;"></div>
+    <h3 class="text-xl font-bold mb-2">3. Evolving Care</h3>
+    <p class="text-gray-600">
+        Alzora AI learns from every interaction, giving more personalized insights over time.
+    </p>
+    </div>
+    </div>
+    </section>
+
+<section id="features">
+    <h2>Key Features</h2>
+
+    <ul class="shop-pets">
+        <li class="card-large card-light" id="sup-dog">
+            <div class="card-image"><img src="images/vitals.png"></div>
+            <ul>
+                Vitals Monitor
+                <li><a href="#">Live charts, real-time updates</a></li>
+                <li><a href="#">Spot early health warnings</a></li>
+                <li><a href="#">Simple daily/weekly trends</a></li>
+                <li><a href="#">Secure long-term storage</a></li>
+
+                <button class="btn-outline-light" onclick="window.location.href='dashboard.html'">Try Now<span class="material-symbols-outlined">
+                        arrow_forward
+                    </span></button>
+
+            </ul>
+
+
+        </li>
+
+        <li class="card-large card-dark" id="sup-cat">
+            <div class="card-image"><img src="images/doctor.png"></div>
+            <ul>Patient Manager
+                <li><a href="#">Add & manage patient</a></li>
+                <li><a href="#">Quick patient switching</a></li>
+                <li><a href="#">Edit patient profiles</a></li>
+                <button class="btn-outline-dark" onclick="window.location.href='add-patient.html'">Try Now<span class="material-symbols-outlined">
+                        arrow_forward
+                    </span></button>
+            </ul>
+
+        </li>
+
+        <li class="card-large card-dark" id="sup-bird">
+            <div class="card-image"><img src="images/find.png"> </div>
+            <ul>AI Assistant
+                <li><a href="#">Ask health questions</a></li>
+                <li><a href="#">Trained on Alzheimer’s data</a></li>
+                <li><a href="#">24/7 patient support</a></li>
+                <button class="btn-outline-dark" onclick="window.location.href='chat.html'">Try Now<span class="material-symbols-outlined">
+                        arrow_forward
+                    </span></button>
+            </ul>
+
+        </li>
+        <li class="card-large card-light" id="sup-fish">
+            <div class="card-image"><img src="images/healthcare.png"></div>
+            <ul>
+                Watch Connect
+                <li><a href="#">Sync smart watches</a></li>
+                <li><a href="#">Unusual alerts triggered</a></li>
+                <button class="btn-outline-light" onclick="window.location.href='add-patient.html'">Try Now<span class="material-symbols-outlined">
+                        arrow_forward
+                    </span></button>
+            </ul>
+
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Our Services</h2>
+
+    <ul class="services">
+        <li class="card-large card-dark card-wide" id="serv-groom">
+            <div class="card-image"><img src="images/vitals2.png"></div>
+            <ul>
+                Patient Vitals<span class="subtitle">Stay on top of your patient's health with real-time monitoring and insights.</span>
+                <li><a href="#">Heart Rate Tracking</a></li>
+                <li><a href="#">Activity Monitor</a></li>
+                <li><a href="#">Sleep Analysis</a></li>
+                <button class="btn-filled-dark" onclick="window.location.href='chat.html'"><span class="material-symbols-outlined">
+                        explore
+                    </span>Try Now</button>
+
+            </ul>
+
+
+        </li>
+        <li class="card-large card-dark card-wide" id="serv-board">
+            <div class="card-image"><img src="images/health-insights.png"></div>
+            <ul>
+                AI Insights<span class="subtitle">Get instant answers and personalized care guidance powered by Alzora AI.</span>
+                <li><a href="#">Disease Q&A</a></li>
+                <li><a href="#">Nutrition Guidance</a></li>
+                <li><a href="#">Behavior Support</a></li>
+                <button class="btn-filled-dark" onclick="window.location.href='chat.html'"><span class="material-symbols-outlined">
+                        explore
+                    </span>Try Now</button>
+            </ul>
+
+        </li>
+    </ul>
+</section>
+
+<section id="locate">
+
+    <div>
+        <h2>Our Philosophy</h2>
+        <p>At Alzora AI, we believe that prevention is the best form of care. Our mission is to empower patient guardians with AI-driven tools to monitor and manage their patients'  health proactively. </p>
+        <div class="btn-group">
+            <button class="btn-outline-dark btn-hover-color" onclick="window.location.href='chat.html'"><span class="material-symbols-outlined">
+contact_support
+</span> Explore our AI Assistant</button>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <ul>
+      Features
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="add-patient.html">Add Patient</a></li>
+      <li><a href="chat.html">Alzora Agent</a></li>
+    </ul>
+  
+    <ul>
+      Resources
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">FAQs</a></li>
+      <li><a href="#">Support</a></li>
+    </ul>
+  
+    <ul>
+      Account
+      <li><a href="login.html">Login</a></li>
+      <li><a href="login.html">Signup</a></li>
+    </ul>
+  
+    <ul>
+      Company
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  
+  </footer>
+  
+</body>
+</html>
