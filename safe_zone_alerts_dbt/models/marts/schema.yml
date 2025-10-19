@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_patients
+    tests:
+      - not_null:
+          column_name: patient_id
+      - unique:
+          column_name: patient_id
+
+  - name: stg_patient_vitals
+    tests:
+      - not_null:
+          column_name: patient_id
+
+  - name: latest_vitals
+    tests:
+      - not_null:
+          column_name: patient_id
+      - unique:
+          column_name: patient_id
+
+  - name: alerts_incremental
+    tests:
+      - not_null:
+          column_name: patient_id

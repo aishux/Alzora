@@ -3,3 +3,4 @@ logs
 test
 Datasets/MRI_Dataset
 .env
+client.properties

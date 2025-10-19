@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: alzora_datawarehouse
+    database: alzora-474820
+    schema: alzora_datawarehouse
+    tables:
+      - name: patients
+
+  - name: patients_vitals
+    database: alzora-474820
+    schema: patients_vitals
+    tables:
+      - name: patient_vitals
