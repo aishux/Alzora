@@ -13,9 +13,9 @@ select
   p.safe_center_lat,
   p.safe_center_long,
   p.safe_radius_meters,
-  {{ macros.st_distance_meters('p.safe_center_long','p.safe_center_lat','l.gps_long','l.gps_lat') }} as distance_meters,
+  {{ st_distance_meters('p.safe_center_long','p.safe_center_lat','l.gps_long','l.gps_lat') }} as distance_meters,
   case
-    when {{ macros.st_distance_meters('p.safe_center_long','p.safe_center_lat','l.gps_long','l.gps_lat') }} > p.safe_radius_meters then true
+    when {{ st_distance_meters('p.safe_center_long','p.safe_center_lat','l.gps_long','l.gps_lat') }} > p.safe_radius_meters then true
     else false
   end as is_outside_safe_zone
 from latest l
