@@ -133,38 +133,10 @@ def consume(topic, config):
     finally:
         consumer.close()
 
-def produce(topic, config):
-    # creates a new producer instance
-    producer = Producer(config)
-
-    # produces a sample message
-    key = "1"
-    value = json.dumps({
-    "created_at": "2025-10-21T10:22:17+00:00",
-    "distance_meters": 6270834.276524853,
-    "event_ts": "2025-10-19T11:51:06+00:00",
-    "gps_lat": 19.08686042215248,
-    "gps_long": 72.87466788957467,
-    "is_outside_safe_zone": True,
-    "patient_id": 1,
-    "safe_center_lat": 19.08593428306023,
-    "safe_center_long": 12.87493471397659,
-    "safe_radius_meters": 300,
-    "operation": "added"
-    })
-
-    producer.produce(topic, key=key, value=value)
-    print(f"Produced message to topic {topic}: key = {key:12} value = {value:12}")
-
-    # send any outstanding or buffered messages to the Kafka broker
-    producer.flush()
-
-
 
 def main():
     config = read_config()
     topic = "safezone_alerts"
-    produce(topic, config)
     consume(topic, config)
 
 main()
