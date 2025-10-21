@@ -56,6 +56,6 @@ models:
           +materialized: view
         alerts_incremental:
           +materialized: incremental
-          +unique_key: ['patient_id','event_ts']   # use compound unique key or a flat hash
+          +unique_key: alert_id
           +partition_by: {"field": "created_at", "data_type": "timestamp"}
           +cluster_by: ["patient_id"]
