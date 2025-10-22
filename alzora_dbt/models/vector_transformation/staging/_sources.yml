@@ -10,6 +10,8 @@ sources:
         columns:
           - name: memory_id
             description: "Memory ID"
+          - name: patient_id
+            description: "Patient ID"
           - name: text_embedding
             description: "JSON array of text float values"
           - name: image_embedding

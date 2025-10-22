@@ -6,6 +6,7 @@
 
 select
     memory_id,
+    patient_id,
     array(
         select safe_cast(json_value(elem) as float64)
         from unnest(json_query_array(text_embedding)) as elem

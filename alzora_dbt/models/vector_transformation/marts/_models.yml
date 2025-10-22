@@ -9,6 +9,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: patient_id
+        description: "Patient Id"
+        tests:
+          - not_null
       - name: text_embedding
         description: "Embedding vector as ARRAY<FLOAT64>"
         tests:
