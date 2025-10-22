@@ -4,14 +4,6 @@
     "TIDB_PASS":"",
     "TIDB_PORT":"",
     "TIDB_DATABASE":"",
-    "TABLES_PRIMARY_KEY_COLUMNS": {
-        "table1":"txn_id",
-        "table2":"user_id"
-    },
-    "VECTOR_TABLES_DATA": {
-        "table1": {
-            "primary_key_column": "",
-            "vector_column": ""
-        }
-    }
+    "TABLES_PRIMARY_KEY_COLUMNS": "{\"caretakers\":\"caretaker_id\",\"patients\":\"patient_id\",\"patient_metadata\":\"metadata_id\",\"usual_spots\":\"spot_id\"}",
+    "VECTOR_TABLES_DATA": "{\"memories\":{\"primary_key_column\":\"memory_id\",\"vector_column\":\"image_embedding\"},\"mri_image_embeddings\":{\"primary_key_column\":\"id\",\"vector_column\":\"embedding\"}}"
 }
