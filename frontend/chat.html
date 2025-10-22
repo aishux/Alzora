@@ -525,7 +525,7 @@
           btn.className = "option-button";
           btn.onclick = () => {
             addMessage(patient, true);
-            addMessage(`Absolutely! How may I assist you with your ${patient.toLowerCase()} today?`);
+            addMessage(`Absolutely! How may I assist you with ${patient} today?`);
             optionsContainer.remove();
           };
           optionsContainer.appendChild(btn);
