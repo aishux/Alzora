@@ -506,7 +506,7 @@
     });
 
     setTimeout(() => {
-        const msg = addMessage("🐾 Hello! I'm your AI assistant. Could you please select your pet?");
+        const msg = addMessage("🐾 Hello! I'm your AI assistant. Could you please select your patient?");
         const bubble = msg.querySelector('.message-bubble'); // ⬅️ put options inside the bubble
       
         const options = ["Granny Alicia", "Uncle Mark"];
@@ -519,13 +519,13 @@
         optionsContainer.style.flexWrap = "nowrap";
         optionsContainer.style.marginTop = "12px"; 
       
-        options.forEach(pet => {
+        options.forEach(patient => {
           const btn = document.createElement("button");
-          btn.textContent = pet;
+          btn.textContent = patient;
           btn.className = "option-button";
           btn.onclick = () => {
-            addMessage(pet, true);
-            addMessage(`Absolutely! How may I assist you with your ${pet.toLowerCase()} today?`);
+            addMessage(patient, true);
+            addMessage(`Absolutely! How may I assist you with your ${patient.toLowerCase()} today?`);
             optionsContainer.remove();
           };
           optionsContainer.appendChild(btn);
