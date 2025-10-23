@@ -5,6 +5,7 @@ from .agents.memory_retriever_agent.agent import memory_retriever_agent
 from .agents.condition_analyser_agent.agent import condition_analyser_agent
 from .agents.vitals_info_agent.agent import vitals_info_agent
 from .agents.anxiety_reducer_agent.agent import anxiety_reducer_agent
+from .agents.report_generation_agent.agent import report_generation_agent
 
 root_agent = Agent(
     model='gemini-2.5-flash',
@@ -18,6 +19,7 @@ root_agent = Agent(
         3. condition_analyser_agent: This agent is responsible for identifying the condition of the patient by checking MRI scan and ask asking a few drill down questions. Use this agent when user needs to inquire about the condition of a patient.
         4. vitals_info_agent: This agent is responsible for answering based on the patient's vitals. Use this agent when user question can be answered using the patient's tracked vitals.
         5. anxiety_reducer_agent: This agent is responsible for reducing the patient's anxiety and helping them calm down. Use this agent when you think that user is feeling anxious, sad, lonely or any such condition where they need a therapist or a companion.
+        6. report_generation_agent: This agent is responsible for generating the report for the patient.
 
         Before calling any agent you should first set the patient information by passing the patient_id to the tool set_patient_information and once done you can proceed with your agent orchestration.
     """,
@@ -26,7 +28,8 @@ root_agent = Agent(
         memory_retriever_agent,
         condition_analyser_agent,
         vitals_info_agent,
-        anxiety_reducer_agent
+        anxiety_reducer_agent,
+        report_generation_agent
     ],
     tools=[
         set_patient_information
