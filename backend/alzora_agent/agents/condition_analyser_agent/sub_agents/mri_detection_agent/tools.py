@@ -25,7 +25,7 @@ def mri_search(tool_context: ToolContext, query: str):
                     base.mri_scan_type,
                     distance
                     FROM VECTOR_SEARCH(
-                        TABLE `alzora_datawarehouse.mri_image_embeddings`
+                        TABLE `MRI_Embeddings_Dataset.mri_embeddings`,
                         'mri_embeddings',
                         TABLE query_emb,
                         top_k => 1,
@@ -33,7 +33,9 @@ def mri_search(tool_context: ToolContext, query: str):
                     );
         ''')
 
-        return {"Detected Condition": dict(list(search_results)[0])["mri_scan_type"]}
+        tool_context.state["mri_condition"] = dict(list(search_results)[0])["mri_scan_type"]
+
+        return {"Detected Condition": tool_context.state["mri_condition"]}
 
     except Exception as e:
         print("Exception is: " + str(e))

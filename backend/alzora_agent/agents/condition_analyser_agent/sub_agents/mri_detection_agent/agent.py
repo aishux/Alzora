@@ -12,6 +12,9 @@ mri_detection_agent = Agent(
 
        For making the response more customized use the below patient's information:
        {patient_information}
+
+       IMPORTANT:
+       ONCE CONDITION IS IDENTIFIED TRANSFER THE CONTROL TO THE PARENT AGENT.
     """,
     tools=[mri_search],
     output_key="mri_condition",
