@@ -1,0 +1,888 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static "alzoraapp/images/favicon/apple-touch-icon.png" %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static "alzoraapp/images/favicon/favicon-32x32.png" %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static "alzoraapp/images/favicon/favicon-16x16.png" %}">
+  <link rel="manifest" href="{% static "alzoraapp/images/favicon/site.webmanifest" %}">
+  <title>Alzora AI: AI Assistant</title>
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link href="{% static "alzoraapp/css/styles.css" %}" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #4b6eb8, #e2ebfd);
+      --secondary-gradient: linear-gradient(135deg, #49271F, #BC8F76);
+      --bg-color: #ffffff;
+      --chat-bg: #f8fafc;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --bot-message-bg: #f1f5f9;
+      --user-message-bg: #C5AD90;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --chat-bg: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --bot-message-bg: #334155;
+      --user-message-bg: #C5AD90;
+      --border-color: #334155;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      background-color: var(--bg-color);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .bot-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 1.25rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bot-message-bg);
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      background-color: var(--chat-bg);
+      scroll-behavior: smooth;
+      max-height: 65vh;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: messageAppear 0.5s ease forwards;
+    }
+
+    @keyframes messageAppear {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      margin-right: 1rem;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+    }
+
+    .user-message .avatar {
+      background: var(--secondary-gradient);
+    }
+
+    .message-bubble {
+      max-width: 70%;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-sm);
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .bot-message .message-bubble {
+      background-color: var(--bot-message-bg);
+      border-top-left-radius: 0;
+    }
+
+    .user-message {
+      flex-direction: row-reverse;
+    }
+
+    .user-message .avatar {
+      margin-right: 0;
+      margin-left: 1rem;
+    }
+
+    .user-message .message-bubble {
+      background: var(--user-message-bg);
+      color: white;
+      border-top-right-radius: 0;
+    }
+
+    .typing-indicator {
+      display: none;
+      padding: 1rem 1.5rem;
+      background-color: var(--bot-message-bg);
+      border-radius: 1rem;
+      width: fit-content;
+      margin-left: 3.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--text-secondary);
+      border-radius: 50%;
+      animation: typingBounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    .input-container {
+      padding: 1.5rem;
+      background-color: var(--bg-color);
+      border-top: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 1rem;
+      background-color: var(--chat-bg);
+      border-radius: 1rem;
+      padding: 0.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .message-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .message-input:focus {
+      outline: none;
+    }
+
+    .message-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    .action-button {
+      background: none;
+      border: none;
+      padding: 0.75rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .action-button:hover {
+      background-color: var(--bot-message-bg);
+      color: var(--text-primary);
+    }
+
+    .send-button {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .send-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* faint pulsing text */
+    .bubble-analysing {
+      opacity: 0.4;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    /* dots typing effect */
+    .typing-dots::after {
+      content: '';
+      display: inline-block;
+      animation: dots 1.5s steps(3, end) infinite;
+      width: 1em;
+      text-align: left;
+    }
+
+    @keyframes dots {
+      0%   { content: ''; }
+      33%  { content: '.'; }
+      66%  { content: '..'; }
+      100% { content: '...'; }
+    }
+
+
+    @media (max-width: 768px) {
+      .container {
+        height: 100dvh;
+      }
+
+      .header-title h1 {
+        font-size: 1.25rem;
+      }
+
+      .chat-container {
+        padding: 1rem;
+      }
+
+      .message-bubble {
+        max-width: 85%;
+      }
+
+      .input-container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="banner">Because Every Patient Deserves Free Care.</div>
+    <nav>
+
+      <div id="logo">
+        <img src="{% static 'alzoraapp/images/logo.png' %}" alt="Alzora AI Logo" width="140" height="132">
+      </div>
+      <ul class="navigation-menu">
+          <li><a href="{% url "mainpage" %}">Home</a></li>
+          {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
+          <li><a href="{% url "addPatient" %}">Add Patient</a></li>
+          {% endif %}
+          <li><a href="{% url "chat" %}">Alzora Agent</a></li>
+          <li><a href="{% url "dashboard" %}">Dashboard</a></li>
+      </ul>
+      <div id="utility">
+        {% if request.user.is_authenticated %}
+        <a href="{% url "logout" %}" class="tooltip" style="color: var(--text-01) !important;">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="tooltip-text">Logout</span>
+        </a>
+        {% else %}
+        <div class="btn-group">
+          <button class="btn-outline-dark btn-hover-color" onclick="window.location.href='{% url 'login' %}'">
+            <span class="material-symbols-outlined">login</span> Login/Signup
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+  <div class="container">
+    <section class="header" style="padding: 13px 30px 13px 0 !important;">
+      <div class="header-title">
+        <h1>AI Assistant</h1>
+        <div class="bot-status">
+          <div class="status-indicator"></div>
+          <span>Online</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </section>
+
+    <div class="chat-container" id="chatContainer">
+      <!-- Messages will be added here -->
+    </div>
+
+    <div class="typing-indicator">
+      <div class="typing-dots">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+
+    <div class="input-container" id="queryInputContainer">
+      <div class="input-wrapper">
+        <input type="text" class="message-input" placeholder="Type your message..." aria-label="Message input">
+
+        <div class="action-buttons">
+          <!-- hidden file input -->
+          <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+
+          <!-- paperclip button triggers file input -->
+          <button class="action-button" aria-label="Add attachment" id="attachButton">
+            <i class="fas fa-paperclip"></i>
+          </button>
+
+          <button class="action-button" aria-label="Voice input">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="send-button">
+            <span>Send</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <ul>
+      Features
+      <li><a href="{% url "mainpage" %}">Home</a></li>
+      <li><a href="{% url "dashboard" %}">Dashboard</a></li>
+      {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
+      <li><a href="{% url "addPatient" %}">Add Patient</a></li>
+      {% endif %}
+      <li><a href="{% url "chat" %}">Alzora Agent</a></li>
+    </ul>
+
+    <ul>
+      Resources
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">FAQs</a></li>
+      <li><a href="#">Support</a></li>
+    </ul>
+
+    <ul>
+      Account
+      <li><a href="{% url "login" %}">Login</a></li>
+      <li><a href="{% url "login" %}">Signup</a></li>
+    </ul>
+
+    <ul>
+      Company
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+
+  <script>
+    document.getElementById("queryInputContainer").hidden = true
+    const themeToggle = document.querySelector('.theme-toggle');
+    const body = document.body;
+    const chatContainer = document.getElementById('chatContainer');
+    const messageInput = document.querySelector('.message-input');
+    const sendButton = document.querySelector('.send-button');
+    const typingIndicator = document.querySelector('.typing-indicator');
+    const AgentApiBaseUrl = "https://alzora-agent-service-763935002709.us-central1.run.app";
+    let attached_files = []
+
+    // Theme toggling
+    let isDarkTheme = false;
+    themeToggle.addEventListener('click', () => {
+      isDarkTheme = !isDarkTheme;
+      body.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+      themeToggle.innerHTML = isDarkTheme ?
+        '<i class="fas fa-sun"></i>' :
+        '<i class="fas fa-moon"></i>';
+    });
+
+    // Chat functionality
+    function createMessageElement(content, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+
+      messageDiv.innerHTML = `
+        <div class="avatar">${isUser ? 'U' : 'AI'}</div>
+        <div class="message-bubble">${content}</div>
+      `;
+
+      return messageDiv;
+    }
+
+    function addMessage(content, isUser = false) {
+      const messageElement = createMessageElement(content, isUser);
+      chatContainer.appendChild(messageElement);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return messageElement;
+    }
+
+    function showTypingIndicator() {
+      typingIndicator.style.display = 'block';
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      typingIndicator.style.display = 'none';
+    }
+
+    function handleSendMessage() {
+      const message = messageInput.value.trim();
+      if (message) {
+        addMessage(message, true);
+        messageInput.value = '';
+        getAgentResponseSSE(message)
+      }
+    }
+
+    sendButton.addEventListener('click', handleSendMessage);
+
+    setTimeout(() => {
+      const patientId = "{{ patient_id|default:'' }}";
+
+      if (patientId) {
+        const msg = addMessage("Hello! I'm your AI assistant. Please tell me how may I assist you today?");
+        createSession()
+        sessionStorage.setItem("current_patient_id", "{{ patient_id }}")
+      }
+      else{
+        const msg = addMessage("Hello! I'm your AI assistant. Could you please select your patient?");
+        const bubble = msg.querySelector('.message-bubble');
+        let options = {};
+        {% for patient in all_patients %}
+        options["{{ patient.patient_id }}"] = "{{ patient.first_name }}";
+        {% endfor %}
+        const optionsContainer = document.createElement("div");
+        optionsContainer.className = "options-container";
+
+        // fallback inline styles in case your CSS didn't load
+        optionsContainer.style.display = "flex";
+        optionsContainer.style.gap = "10px";
+        optionsContainer.style.flexWrap = "nowrap";
+        optionsContainer.style.marginTop = "12px";
+
+        for (const [patientid, name] of Object.entries(options)) {
+          const btn = document.createElement("button");
+          btn.textContent = name;
+          btn.id = patientid
+          btn.className = "option-button";
+          btn.onclick = () => {
+            addMessage(name, true);
+            optionsContainer.remove();
+            sessionStorage.setItem("current_patient_id", patientid)
+            createSession()
+          };
+          optionsContainer.appendChild(btn);
+        };
+
+        bubble.appendChild(optionsContainer);
+      }
+    }, 500);
+    
+
+    const fileInput = document.getElementById('fileInput');
+    const attachButton = document.getElementById('attachButton');
+    attachButton.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        attached_files.push(file)
+        addMessage("📎 Selected file: " + file.name, true);
+        addMessage("Noted your file please tell me further!")
+      }
+    });
+
+
+    function createSession() {
+      
+      const msg = addMessage("");
+      const bubble = msg.querySelector('.message-bubble');
+      bubble.classList.add("bubble-analysing", "typing-dots");
+      bubble.textContent = "Creating your Session"
+
+      const data = {
+        app_name: "alzora_agent",
+        user_id: "{{ request.user.id }}"
+      };
+
+      fetch(AgentApiBaseUrl + "/apps/alzora_agent/users/{{ request.user.id }}/sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json())  // parse JSON
+        .then(json => {
+          console.log(json); // full parsed object
+          sessionStorage.setItem("current_session_id", json.id);
+          document.getElementById("queryInputContainer").hidden = false
+          bubble.classList.remove("bubble-analysing", "typing-dots");
+          bubble.textContent = `Let's go! Please tell me how may I assist you today?`
+        })
+        .catch(err => console.error("Error creating session:", err));
+    }
+
+
+    async function buildPayload(message, sessionId) {
+      const parts = [
+        {
+          text: message
+        }
+      ];
+
+      if (attached_files.length > 0) {
+        const file = attached_files[0];
+
+        // Convert file → base64 string
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            // reader.result is "data:<mime>;base64,<encoded>"
+            const base64Data = reader.result.split(",")[1];
+            resolve(base64Data);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        parts.push({
+          inlineData: {
+            displayName: file.name,
+            data: base64,
+            mimeType: file.type
+          }
+        });
+        attached_files = []
+      }
+
+      return {
+        appName: "alzora_agent",
+        userId: "{{request.user.id}}",
+        sessionId: sessionId,
+        newMessage: {
+          parts: parts,
+          role: "user"
+        },
+        streaming: true
+      };
+    }
+
+
+    async function getAgentResponseSSE(message) {
+
+      const sessionId = sessionStorage.getItem("current_session_id");
+      message = message + ".The patient_id for this patient is " + sessionStorage.getItem("current_patient_id")
+
+      const msg = addMessage("");
+      const bubble = msg.querySelector('.message-bubble');
+      bubble.classList.add("bubble-analysing", "typing-dots");
+      bubble.textContent = "Analysing your query"
+
+      // Example request data, replace with your own payload if needed
+      const data = await buildPayload(message, sessionId)
+
+      streamToBubble(AgentApiBaseUrl + "/run_sse", data, bubble);
+    }
+
+
+    function streamToBubble(fetchUrl, payload, bubbleElement) {
+      const THROTTLE_MS = 200;         // max UI updates frequency
+      const INACTIVITY_MS = 5000;      // show fallback after this much idle time
+      const TRUNCATE_LEN = 300;        // how much incremental text to show
+
+      let lastUiUpdate = 0;
+      let pendingUiTimer = null;
+      let pendingMessage = null;
+      let incrementalText = "";        // accumulated partial text
+      let lastEventAt = Date.now();
+      let inactivityTimer = null;
+
+      function scheduleInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          // If no event for INACTIVITY_MS, show a gentle progress message
+          safeUpdateUI("Still processing — this might take a moment…");
+        }, INACTIVITY_MS);
+      }
+
+      function safeUpdateUI(msg, force = false, final_message = false) {
+        const now = Date.now();
+
+        function renderMessage(m) {
+          let html = marked.parse(m).replaceAll("<strong>", '<strong style="font-weight: bolder;">');
+
+          if (!final_message) {
+            bubbleElement.classList.add("bubble-analysing", "typing-dots");
+          } else {
+            bubbleElement.classList.remove("bubble-analysing", "typing-dots");
+          }
+
+          bubbleElement.innerHTML = html;
+        }
+
+        // throttle updates
+        if (force || (now - lastUiUpdate) >= THROTTLE_MS) {
+          renderMessage(msg);
+          lastUiUpdate = now;
+          if (pendingUiTimer) { clearTimeout(pendingUiTimer); pendingUiTimer = null; }
+        } else {
+          pendingMessage = msg;
+          if (!pendingUiTimer) {
+            pendingUiTimer = setTimeout(() => {
+              renderMessage(pendingMessage);
+              lastUiUpdate = Date.now();
+              pendingUiTimer = null;
+              pendingMessage = null;
+            }, THROTTLE_MS - (now - lastUiUpdate));
+          }
+        }
+      }
+
+
+      function truncateForUI(text) {
+        if (!text) return "";
+        if (text.length <= TRUNCATE_LEN) return text;
+        return text.slice(0, TRUNCATE_LEN) + "…";
+      }
+
+      // Heuristic helpers that inspect a parsed event object
+      function hasFunctionCall(parsed) {
+        try {
+          return Boolean(parsed.content && parsed.content.parts && parsed.content.parts.some(p => p.functionCall));
+        } catch { return false; }
+      }
+      function hasFunctionResponse(parsed) {
+        try {
+          return Boolean(parsed.content && parsed.content.parts && parsed.content.parts.some(p => p.functionResponse));
+        } catch { return false; }
+      }
+      function getStatePatientName(parsed) {
+        try {
+          const sd = parsed.actions && parsed.actions.stateDelta;
+          return sd && sd.patient_information && sd.patient_information.name;
+        } catch { return null; }
+      }
+      function getAnyTextParts(parsed) {
+        try {
+          if (!parsed.content || !parsed.content.parts) return "";
+          return parsed.content.parts.map(p => p.text || "").join("");
+        } catch { return ""; }
+      }
+
+      // The actual fetch + stream reading
+      fetch(fetchUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "text/event-stream"
+        },
+        body: JSON.stringify(payload)
+      }).then(response => {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        function pump() {
+          reader.read().then(({ done, value }) => {
+            if (done) {
+              // stream ended — push final incremental text if any
+              if (incrementalText) safeUpdateUI(truncateForUI(incrementalText), true);
+              return;
+            }
+
+            lastEventAt = Date.now();
+
+            buffer += decoder.decode(value, { stream: true });
+
+            // SSE events are separated by a blank line (\n\n). Keep trailing partial event in buffer.
+            const events = buffer.split(/\r?\n\r?\n/);
+            buffer = events.pop() || ""; // last item may be incomplete - keep it
+
+            for (const evt of events) {
+              // gather all lines that start with "data:" (SSE can have multiple data lines per event)
+              const lines = evt.split(/\r?\n/).filter(l => l.startsWith("data:"));
+              if (lines.length === 0) continue;
+
+              const jsonText = lines.map(l => l.replace(/^data:\s*/, "")).join("\n");
+              // Try to parse JSON. If parsing fails, skip (it may be a non-JSON or partial event).
+              let parsed;
+              try {
+                parsed = JSON.parse(jsonText);
+              } catch (e) {
+                // Not a full JSON — skip this event (we'll get the rest later)
+                continue;
+              }
+
+              // handle event
+              handleEvent(parsed);
+            }
+
+            pump();
+          }).catch(err => {
+            console.error("Stream read error:", err);
+            safeUpdateUI("Connection error while streaming.");
+          });
+        } // pump
+
+        pump();
+      }).catch(err => {
+        console.error("Fetch error:", err);
+        safeUpdateUI("Unable to start stream.");
+      });
+
+      // Main handler — choose small messages based on event content
+      function handleEvent(parsed) {
+        // 1) function call: model asked for some tool (show short message)
+        if (hasFunctionCall(parsed)) {
+          safeUpdateUI("Looking up patient information…");
+          return;
+        }
+
+        // 2) function response: tool returned — analyze next
+        if (hasFunctionResponse(parsed)) {
+          safeUpdateUI("Data received — analyzing…");
+          return;
+        }
+
+        // 3) actions.stateDelta contains patient info
+        const patientName = getStatePatientName(parsed);
+        if (patientName) {
+          safeUpdateUI(`Found patient: ${patientName} — checking recent vitals…`);
+          return;
+        }
+
+        // 4) partial text streaming — append incrementally but show only a trimmed preview
+        if (parsed.partial) {
+          const newText = getAnyTextParts(parsed);
+          if (newText) {
+            incrementalText += newText;
+            safeUpdateUI(truncateForUI(incrementalText));
+            return;
+          }
+        }
+
+        // 5) final text: show model's final message
+        const finalText = getAnyTextParts(parsed);
+        if (finalText) {
+          // set final text (force immediate)
+          safeUpdateUI(finalText, true, true);
+          incrementalText = ""; // reset
+          return;
+        }
+
+        // fallback: small heartbeat
+        safeUpdateUI("Processing");
+      }
+    }
+
+  </script>
+
+</body>
+
+</html>

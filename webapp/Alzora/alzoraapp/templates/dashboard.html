@@ -1,0 +1,247 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static "alzoraapp/images/favicon/apple-touch-icon.png" %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static "alzoraapp/images/favicon/favicon-32x32.png" %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static "alzoraapp/images/favicon/favicon-16x16.png" %}">
+  <link rel="manifest" href="{% static "alzoraapp/images/favicon/site.webmanifest" %}">
+  <title>Alzora Ai - Home</title>
+    <!-- CSS + Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static "alzoraapp/css/styles.css" %}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #utility {
+      display: flex;
+      gap: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    main {
+      padding: 20px 20px;
+      margin: auto;
+    }
+    .patient-selector {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 25px;
+    }
+    .chart-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .chart-card canvas {
+    max-height: 300px;   /* limit all charts */
+    }
+    
+    .chart-card.pie canvas {
+    max-width: 300px;    /* keep pie smaller */
+    margin: auto;        /* center it */
+    }
+      
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="banner">Because Every Patient Deserves Free Care.</div>
+    <nav>
+          
+        <div id="logo">
+            <img src="{% static 'alzoraapp/images/logo.png' %}" alt="Alzora AI Logo" width="140" height="132">
+        </div>
+        <ul class="navigation-menu">
+            <li><a href="{% url "mainpage" %}">Home</a></li>
+            {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
+            <li><a href="{% url "addPatient" %}">Add Patient</a></li>
+            {% endif %}
+            <li><a href="{% url "chat" %}">Alzora Agent</a></li>
+            <li><a href="{% url "dashboard" %}">Dashboard</a></li>
+        </ul>
+        <div id="utility">
+            {% if request.user.is_authenticated %}
+            <a href="{% url "logout" %}" class="tooltip">
+              <span class="material-symbols-outlined">logout</span>
+              <span class="tooltip-text">Logout</span>
+            </a>
+            {% else %}
+            <div class="btn-group">
+                <button class="btn-outline-dark btn-hover-color" onclick="window.location.href='{% url 'login' %}'">
+                    <span class="material-symbols-outlined">login</span> Login/Signup
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+  <!-- Main -->
+  <main>
+    <div class="patient-selector">
+      <label for="patientSelect">Select Patient: </label>
+      <select id="patientSelect">
+        {% for patient in all_patients %}
+        <option id="{{patient.patient_id}}">{{patient.first_name}} ({{patient.last_name}})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Average Heart Rate</h3>
+        <canvas id="barChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Step Count</h3>
+        <canvas id="lineChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Vitals Breakdown</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Overall Vitals</h3>
+        <canvas id="radarChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Average SpO2 levels</h3>
+        <canvas id="barChart2"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Activity Levels</h3>
+        <canvas id="bubbleChart"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <ul>
+      Features
+      <li><a href="{% url "mainpage" %}">Home</a></li>
+      <li><a href="{% url "dashboard" %}">Dashboard</a></li>
+      {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
+      <li><a href="{% url "addPatient" %}">Add Patient</a></li>
+      {% endif %}
+      <li><a href="{% url "chat" %}">Alzora Agent</a></li>
+    </ul>
+  
+    <ul>
+      Resources
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">FAQs</a></li>
+      <li><a href="#">Support</a></li>
+    </ul>
+  
+    <ul>
+      Account
+      <li><a href="{% url "login" %}">Login</a></li>
+      <li><a href="{% url "login" %}">Signup</a></li>
+    </ul>
+  
+    <ul>
+      Company
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  
+  </footer>
+
+  <!-- Chart Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const patientSelect = document.getElementById("patientSelect");
+  let charts = []; // store chart instances so we can destroy/recreate
+
+  function loadCharts(patientId) {
+    const url = `/chartdata/${patientId}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        // Destroy old charts if any (prevents overlapping)
+        charts.forEach(chart => chart.destroy());
+        charts = [];
+
+        // Bar Chart - Heart Rate
+        charts.push(new Chart(document.getElementById("barChart"), {
+          type: "bar",
+          data: data.bar_heart_rate,
+        }));
+
+        // Line Chart - Miles
+        charts.push(new Chart(document.getElementById("lineChart"), {
+          type: "line",
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: "Step Count",
+              data: data.step_count.datasets[0].data,
+              borderColor: "#090808ff",
+              fill: false
+            }]
+          }
+        }));
+
+        // Pie Chart - Distribution
+        charts.push(new Chart(document.getElementById("pieChart"), {
+          type: "pie",
+          data: data.pie_distribution,
+        }));
+
+        // Radar Chart - Vitals
+        charts.push(new Chart(document.getElementById("radarChart"), {
+          type: "radar",
+          data: data.radar_comparison,
+        }));
+
+        // Bar Chart 2 - Sleep Hours
+        charts.push(new Chart(document.getElementById("barChart2"), {
+          type: "bar",
+          data: data.bar_spo2_level,
+        }));
+
+        // Bubble Chart
+        charts.push(new Chart(document.getElementById("bubbleChart"), {
+          type: "bubble",
+          data: data.bubble_chart,
+          options: { responsive: true }
+        }));
+      })
+      .catch(err => console.error("Error fetching chart data:", err));
+  }
+
+  // Load charts for first patient on page load
+  if (patientSelect.options.length > 0) {
+    const firstpatientId = patientSelect.options[0].id;
+    loadCharts(firstpatientId);
+  }
+
+  // Reload charts when another patient is selected
+  patientSelect.addEventListener("change", function () {
+    const selectedpatientId = patientSelect.options[patientSelect.selectedIndex].id;
+    loadCharts(selectedpatientId);
+  });
+});
+</script>

@@ -1,0 +1,294 @@
+{% if messages %}
+<div id="messages-container">
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static "alzoraapp/images/favicon/apple-touch-icon.png" %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static "alzoraapp/images/favicon/favicon-32x32.png" %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static "alzoraapp/images/favicon/favicon-16x16.png" %}">
+  <link rel="manifest" href="{% static "alzoraapp/images/favicon/site.webmanifest" %}">
+  <title>Add Patient</title>
+
+  <!-- CSS + Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="{% static "alzoraapp/css/styles.css" %}" rel="stylesheet">
+</head>
+<body>
+
+<style>
+    /* General button hover (except cross) */
+button:hover {
+  background-color: #4b6eb8 !important;
+  color: white !important;
+  border-color: #4b6eb8 !important;
+}
+
+</style>
+
+<header>
+  <div class="banner">Because Every Patient Deserves Free Care.</div>
+  <nav>
+          
+    <div id="logo">
+          <img src="{% static 'alzoraapp/images/logo.png' %}" alt="Alzora AI Logo" width="140" height="132">
+    </div>
+    <ul class="navigation-menu">
+          <li><a href="{% url "mainpage" %}">Home</a></li>
+          {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
+          <li><a href="{% url "addPatient" %}">Add Patient</a></li>
+          {% endif %}
+          <li><a href="{% url "chat" %}">Alzora Agent</a></li>
+          <li><a href="{% url "dashboard" %}">Dashboard</a></li>
+    </ul>
+    <div id="utility">
+          {% if request.user.is_authenticated %}
+          <a href="{% url "logout" %}" class="tooltip">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="tooltip-text">Logout</span>
+        </a>
+          {% else %}
+          <div class="btn-group">
+              <button class="btn-outline-dark btn-hover-color" onclick="window.location.href='{% url 'login' %}'">
+                  <span class="material-symbols-outlined">login</span> Login/Signup
+              </button>
+          </div>
+          {% endif %}
+    </div>
+</nav>
+</header>
+
+  <!-- Main Content -->
+<main class="p-6 space-y-12">
+
+    <!-- Patients + Add Form side by side -->
+    <section class="grid md:grid-cols-2 gap-10">
+      
+     <!-- Patient List -->
+<div>
+    <h2 class="text-2xl font-semibold text-center mb-6">My Patients</h2>
+    <div class="grid grid-cols-2 gap-6">
+      
+    {% for patient in all_patients %}
+    <div class="card-large p-4 relative bg-white rounded-xl shadow-md overflow-hidden">
+        <!-- Close Button -->
+        <button onclick="removeCard(this)" 
+                class="absolute top-2 right-2 z-10 bg-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-500 hover:text-white transition">
+        &times;
+        </button>
+    
+        <div class="card-image bg-gray-100 relative">
+          {% if patient.gender == "Male" %}
+              <img src="{% static "alzoraapp/images/old-man.png" %}" alt="Grandpa" class="w-full">
+          {% elif patient.gender == "Female" %}
+              <img src="{% static "alzoraapp/images/old-woman.png" %}" alt="Grandma" class="w-full">
+          {% endif %}
+        </div>
+    
+        <ul class="mt-2">
+          <li>{{patient.first_name}} {{patient.last_name}}</li>
+          <li class="text-sm text-gray-600">Age: {{patient.age}}</li>
+        </ul>
+        <!-- Edit Button -->
+          <button type="button" class="btn-outline-dark edit-btn" onclick="editDetails('{{patient.patient_id}}')">Edit Details</button>
+        </div>
+    
+    {% endfor %}
+  
+    </div>
+  </div>
+  
+  
+      <!-- Add New Patient Form -->
+      <div>
+        <h2 class="text-2xl font-semibold text-center mb-6">Add New Patient</h2>
+        <form class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md space-y-4" action="{% url 'addPatient' %}" method="POST" id="addPatientForm">
+        {% csrf_token %}
+          <div>
+            <label class="block font-medium mb-1">Patient Username</label>
+            <input type="text" name="patient_username" class="w-full border rounded-lg px-3 py-2" placeholder="Enter patient username">
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Patient Password</label>
+            <input type="password" name="patient_password" class="w-full border rounded-lg px-3 py-2" placeholder="Enter patient password">
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Patient Name</label>
+            <div class="flex gap-4">
+              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="First Name" name="patient_first_name">
+              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Last Name" name="patient_last_name">
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Gender</label>
+            <select class="w-full border rounded-lg px-3 py-2" name="patient_gender">
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Age</label>
+            <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Age Years" name="patient_age">
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Safe Range Coordinates</label>
+            <div class="flex gap-4">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Latitude Coordinates" name="safe_center_lat">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Longitude Coordinates" name="safe_center_long">
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Safe Range Radius (Meters)</label>
+             <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Radius (Meters)" name="safe_radius_meters">
+          </div>
+          
+          <button type="submit" class="btn-outline-dark w-full">Add Patient</button>
+        </form>
+      </div>
+  
+    </section>
+
+    <!-- Edit Patient Modal -->
+<div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-lg relative">
+      <!-- Close Button -->
+      <button onclick="closeEditModal()" class="absolute top-3 right-3 text-gray-600 hover:text-red-500 text-xl font-bold">✕</button>
+      
+      <h2 class="text-2xl font-semibold text-center mb-6">Edit Patient</h2>
+      <form class="space-y-4" action="{% url 'updatePatientInfo' %}" method="POST" id="updatePatientInfoForm">
+        {% csrf_token %}
+        <div hidden="true">
+          <input type="text" class="w-full border rounded-lg px-3 py-2" name="patient_id" id="patient_id">
+        </div>
+        <div>
+            <label class="block font-medium mb-1">Patient Name</label>
+            <div class="flex gap-4">
+              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="First Name" name="patient_first_name" name="editFirstName" id="editFirstName">
+              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Last Name" name="patient_last_name" name="editLastName" id="editLastName">
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Gender</label>
+            <select class="w-full border rounded-lg px-3 py-2" name="patient_gender" name="editGender" id="editGender">
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Age</label>
+            <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Age Years" name="patient_age" name="editAge" id="editAge">
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Safe Range Coordinates</label>
+            <div class="flex gap-4">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Latitude Coordinates" name="safe_center_lat" name="editSafeLt" id="editSafeLt">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Longitude Coordinates" name="safe_center_long" name="editSafeLong" id="editSafeLong">
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Safe Range Radius (Meters)</label>
+             <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Radius (Meters)" name="safe_radius_meters" name="editSafeRad" id="editSafeRad">
+          </div>
+        
+        <button type="submit" class="btn-outline-dark w-full">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  
+    <!-- Connect Collar stays below -->
+    <section id="locate">
+      <div>
+        <h2>Connect Patient's Watch</h2>
+        <p>Link your patient's smart watch to track health, location, and activities directly from your dashboard.</p>
+        <button class="btn-outline-dark">Connect Now</button>
+      </div>
+    </section>
+  
+  </main>
+  
+
+  <!-- Footer -->
+  <footer>
+    <ul>
+      Features
+      <li><a href="{% url "mainpage" %}">Home</a></li>
+      <li><a href="{% url "dashboard" %}">Dashboard</a></li>
+      {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
+      <li><a href="{% url "addPatient" %}">Add Patient</a></li>
+      {% endif %}
+      <li><a href="{% url "chat" %}">Alzora Agent</a></li>
+    </ul>
+  
+    <ul>
+      Resources
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">FAQs</a></li>
+      <li><a href="#">Support</a></li>
+    </ul>
+  
+    <ul>
+      Account
+      <li><a href="{% url "login" %}">Login</a></li>
+      <li><a href="{% url "login" %}">Signup</a></li>
+    </ul>
+  
+    <ul>
+      Company
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  
+  </footer>
+
+<script>
+    function removeCard(button) {
+      // Find the card (parent div) and remove it
+      const card = button.closest('.card-large');
+      if (card) {
+        card.remove();
+      }
+    }
+
+    function editDetails(patient_id) {
+        document.getElementById("editModal").classList.remove("hidden");
+      fetch(`/patientinfo/${patient_id}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("patient_id").value = data.patient_id;
+            document.getElementById("editFirstName").value = data.first_name;
+            document.getElementById("editLastName").value = data.last_name;
+            document.getElementById("editAge").value = data.age;
+            document.getElementById("editGender").value = data.gender;
+            document.getElementById("editSafeLt").value = data.safe_center_lat;
+            document.getElementById("editSafeLong").value = data.safe_center_long;
+            document.getElementById("editSafeRad").value = data.safe_radius_meters;
+        })
+        .catch(error => console.error("Error fetching patient data:", error));
+    }
+
+    // Close modal
+    function closeEditModal() {
+        document.getElementById("editModal").classList.add("hidden");
+    }
+  </script>
+
+<script src="{% static "alzoraapp/js/base.js" %}"></script>
+  
+</body>
+</html>
