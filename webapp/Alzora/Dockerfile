@@ -5,6 +5,8 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 WORKDIR /app
 
+ENV PATH="/home/myuser/.local/bin:$PATH"
+
 # Install OS packages required to build mysqlclient + a few helpful tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -30,8 +32,6 @@ COPY --chown=myuser:myuser . /app
 # Collect static files into STATIC_ROOT (make sure collectstatic does NOT require DB at import)
 # If collectstatic triggers DB access in settings, you may run this step in CI instead.
 RUN python manage.py collectstatic --noinput || true
-
-ENV PATH="/home/myuser/.local/bin:$PATH"
 
 # Expose port and run gunicorn using $PORT provided by Cloud Run
 CMD exec gunicorn Alzora.wsgi:application --bind :$PORT --workers 2 --threads 4 --timeout 120
