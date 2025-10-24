@@ -147,7 +147,7 @@ def dashboard(request):
         messages.error(request, "Please add atleast one patient first!")
         return HttpResponseRedirect(reverse("addPatient"))
     elif request.user.is_authenticated and request.user.user_type == "patient":
-        return render(request, "dashboard.html")
+        return render(request, "dashboard.html", {"patient_id": request.user.id})
     else:
         return HttpResponseRedirect(reverse("login"))
 

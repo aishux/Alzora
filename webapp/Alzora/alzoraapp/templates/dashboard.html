@@ -99,6 +99,7 @@
 
   <!-- Main -->
   <main>
+    {% if request.user.is_authenticated and request.user.user_type == "caretaker" %}
     <div class="patient-selector">
       <label for="patientSelect">Select Patient: </label>
       <select id="patientSelect">
@@ -107,6 +108,7 @@
         {% endfor %}
       </select>
     </div>
+    {% endif %}
 
     <div class="charts-grid">
       <div class="chart-card">
@@ -233,7 +235,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Load charts for first patient on page load
-  if (patientSelect.options.length > 0) {
+  if ("{{ patient_id }}") {
+    loadCharts("{{ patient_id }}");
+  }
+  else if (patientSelect.options.length > 0) {
     const firstpatientId = patientSelect.options[0].id;
     loadCharts(firstpatientId);
   }
