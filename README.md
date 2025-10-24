@@ -1,3 +1,10 @@
+# Alzora
+<div align="center">
+<img src="https://alzora-745519648629.us-central1.run.app/static/alzoraapp/images/logo.png" width="50%">
+</div>
+
+---
+
 ## 🧠 Inspiration
 
 We built Alzora because families caring for older adults—especially those with early cognitive decline—need practical, reliable tools that reduce day-to-day friction and increase safety. Forgetting where things were placed, wandering episodes, and uncertainty about early symptoms are stressful for both patients and caregivers. We wanted a focused, implementable hackathon solution that blends real-time vitals monitoring, semantic memory assistance, and exploratory MRI image retrieval — all while being explicit that this is a **research/demo tool, not a diagnostic product**.
@@ -29,13 +36,13 @@ Alzora is a web-first system that helps patients and caregivers in three core wa
 
 ### Architecture
 
-![Architecture Diagram](https://storage.googleapis.com/alzora_diagrams/Alzora%20AI%20Architecture%20Diagram%20-%20visual%20selection.png)
+![Architecture Diagram](https://storage.googleapis.com/alzora-diagrams/Alzora%20AI%20Architecture%20Diagram%20-%20visual%20selection.png)
 
 We built Alzora on a scalable and robust architecture, with Fivetran at the center of our data management strategy. The project's data flow begins with a Kafka Streaming pipeline and TiDB database. The data is then efficiently sunk into a Bigquery using Fivetran automated pipelines. To maintain a more robust architecture we have implemented reverse ETL using census and transformations using dbt core jobs.
 
 ### Key components and Flows
 
-![custom tidb connector diagram](https://storage.googleapis.com/alzora_diagrams/Custom_Fivetran_Connector.png)
+![custom tidb connector diagram](https://storage.googleapis.com/alzora-diagrams/Custom_Fivetran_Connector.png)
 
 We built a TiDB custom connector for Fivetran to reliably stream and upsert operational TiDB data into BigQuery, preserving table schemas and primary-key semantics so downstream analytics stay consistent.
 It handles timezone normalization, efficient incremental syncs (stateful checkpoints) and safe parsing of JSON/vector payloads so embeddings and structured data arrive ready for analysis.
@@ -43,17 +50,17 @@ The connector removes the manual ETL pain—automating change capture, schema ma
 Finally, it’s designed to scale from small proof-of-concept loads to larger production volumes, making it easy to add vector-aware tables and evolve the schema over time.
 
 
-![vector dbt diagram](https://storage.googleapis.com/alzora_diagrams/Vector_Transformation_DBT.png)
+![vector dbt diagram](https://storage.googleapis.com/alzora-diagrams/Vector_Transformation_DBT.png)
 
 The **Vector Transformation** dbt job prepares and manages all the **AI embedding data** used by Alzora. It converts patient memories — including text and images — into numerical “vector” representations that the AI can understand. These embeddings power features like **memory similarity search** and **context-based recall**, helping Alzora connect related experiences or images even when they aren’t an exact match. In short, this job is what gives Alzora its “understanding” of patient memories.
 
 
-![Safe zone dbt diagram](https://storage.googleapis.com/alzora_diagrams/Safe_Zone_DBT.png)
+![Safe zone dbt diagram](https://storage.googleapis.com/alzora-diagrams/Safe_Zone_DBT.png)
 
 The **Safe Zone Alerts** dbt job continuously analyzes patients’ real-time GPS data and compares their current location with their defined **safe zone radius**. If a patient moves outside this boundary, the system automatically flags a **breach event** and creates an alert entry. This ensures caregivers or family members are immediately aware when someone may be wandering or in potential danger. It’s a safety layer designed to bring peace of mind through proactive, location-based monitoring.
 
 
-![Census flow diagram](https://storage.googleapis.com/alzora_diagrams/Census_Flow.png)
+![Census flow diagram](https://storage.googleapis.com/alzora-diagrams/Census_Flow.png)
 
 Once the **Safe Zone Alerts** dbt job detects that a patient has moved outside their defined safe area, the resulting alert records are stored in BigQuery. Using **Census**, these alerts are then automatically synced (Reverse ETL) from BigQuery to **Kafka**, which acts as a real-time event streaming system. From Kafka, a lightweight consumer service listens for new alert messages. Whenever a new alert event arrives, it triggers an **email notification** to the assigned caretaker — instantly informing them about the patient’s potential safety breach. This end-to-end flow ensures that insights generated in the data warehouse are **immediately actionable**, bridging analytics and real-world response in real time.
 
@@ -61,7 +68,7 @@ Once the **Safe Zone Alerts** dbt job detects that a patient has moved outside t
 
 ### Google ADK
 
-![Adk agents diagram](https://storage.googleapis.com/alzora_diagrams/ADK_Arch.png)
+![Adk agents diagram](https://storage.googleapis.com/alzora-diagrams/ADK_Arch.png)
 
 ### 🧠 **alzora_agent**
 
