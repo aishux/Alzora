@@ -9,6 +9,7 @@ from datetime import datetime
 def register_memory(tool_context: ToolContext, text_content: str):
     """To register the memory for a patient"""
     try:
+        image_obj=None
         patient_id = tool_context.state["patient_information"]["patient_id"]
         for part in tool_context.user_content.parts:
             if hasattr(part, "inline_data") and part.inline_data:
@@ -18,14 +19,20 @@ def register_memory(tool_context: ToolContext, text_content: str):
 
         table = get_tidb_table("memories")
 
-        embeddings = get_image_embeddings(image_obj, text_content)
+        image_embeddings = None
 
+        if image_obj:
+            embeddings = get_image_embeddings(image_obj, text_content)
+            image_embeddings = embeddings["Image Embedding"]
+            text_embeddings = embeddings["Text Embedding"]
+        else:
+            text_embeddings = get_text_embeddings(text_content)
         table.insert(
             {
                 "patient_id": patient_id,
                 "text_content": text_content,
-                "text_embedding": embeddings["Text Embedding"],
-                "image_embedding": embeddings["Image Embedding"],
+                "text_embedding": text_embeddings,
+                "image_embedding": image_embeddings,
                 "created_at": str(datetime.now()),
                 "updated_at": str(datetime.now()),
             }
