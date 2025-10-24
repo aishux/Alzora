@@ -43,7 +43,7 @@ def search_memory(tool_context: ToolContext, query: str):
                             (
                                 SELECT *
                                 FROM `Alzora_Embeddings_Dataset_alzora_datawarehouse.memories_embeddings`
-                                WHERE patient_id = {patient_id}
+                                WHERE patient_id = {patient_id} AND ARRAY_LENGTH(image_embedding) != 0
                             ),
                         'image_embedding',
                         TABLE query_emb,
@@ -64,7 +64,7 @@ def search_memory(tool_context: ToolContext, query: str):
                             (
                                 SELECT *
                                 FROM `Alzora_Embeddings_Dataset_alzora_datawarehouse.memories_embeddings`
-                                WHERE patient_id = {patient_id}
+                                WHERE patient_id = {patient_id} AND ARRAY_LENGTH(text_embedding) != 0
                             ),
                         'text_embedding',
                         TABLE query_emb,
