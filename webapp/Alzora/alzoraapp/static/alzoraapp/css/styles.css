@@ -943,3 +943,44 @@ footer ul li {
   #features {
     scroll-margin-top: 80px; /* adjust 80px to your header's height */
   }
+
+#messages-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;  /* ensure it overlays content */
+}
+
+.alert {
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    opacity: 0.95;
+    transition: opacity 0.5s ease-out;
+}
+
+/* success */
+.alert-success {
+    background-color: #28a745;
+}
+
+/* error */
+.alert-error,
+.alert-danger {
+    background-color: #dc3545;
+}
+
+/* warning */
+.alert-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+/* info */
+.alert-info {
+    background-color: #17a2b8;
+}

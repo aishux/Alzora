@@ -149,8 +149,8 @@ button:hover {
           <div>
             <label class="block font-medium mb-1">Safe Range Coordinates</label>
             <div class="flex gap-4">
-              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Latitude Coordinates" name="safe_center_lat">
-              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Longitude Coordinates" name="safe_center_long">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Latitude Coordinates" name="safe_center_lat" step="any">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Longitude Coordinates" name="safe_center_long" step="any">
             </div>
           </div>
           <div>
@@ -179,31 +179,31 @@ button:hover {
         <div>
             <label class="block font-medium mb-1">Patient Name</label>
             <div class="flex gap-4">
-              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="First Name" name="patient_first_name" name="editFirstName" id="editFirstName">
-              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Last Name" name="patient_last_name" name="editLastName" id="editLastName">
+              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="First Name" name="editFirstName" id="editFirstName">
+              <input type="text" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Last Name" name="editLastName" id="editLastName">
             </div>
           </div>
           <div>
             <label class="block font-medium mb-1">Gender</label>
-            <select class="w-full border rounded-lg px-3 py-2" name="patient_gender" name="editGender" id="editGender">
+            <select class="w-full border rounded-lg px-3 py-2" name="editGender" id="editGender">
               <option>Male</option>
               <option>Female</option>
             </select>
           </div>
           <div>
             <label class="block font-medium mb-1">Age</label>
-            <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Age Years" name="patient_age" name="editAge" id="editAge">
+            <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Age Years" name="editAge" id="editAge">
           </div>
           <div>
             <label class="block font-medium mb-1">Safe Range Coordinates</label>
             <div class="flex gap-4">
-              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Latitude Coordinates" name="safe_center_lat" name="editSafeLt" id="editSafeLt">
-              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Longitude Coordinates" name="safe_center_long" name="editSafeLong" id="editSafeLong">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Latitude Coordinates" name="editSafeLt" id="editSafeLt" step="any">
+              <input type="number" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Safe Longitude Coordinates" name="editSafeLong" id="editSafeLong" step="any">
             </div>
           </div>
           <div>
             <label class="block font-medium mb-1">Safe Range Radius (Meters)</label>
-             <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Radius (Meters)" name="safe_radius_meters" name="editSafeRad" id="editSafeRad">
+             <input type="number" min="1" class="w-1/2 border rounded-lg px-3 py-2" placeholder="Radius (Meters)" name="editSafeRad" id="editSafeRad">
           </div>
         
         <button type="submit" class="btn-outline-dark w-full">Save Changes</button>

@@ -13,9 +13,8 @@ bigquery_client = bigquery.Client()
 
 def handleLogin(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        username = request.POST.get("username")
         password = request.POST.get("password")
-        username = email.split("@")[0]
         user = authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
@@ -98,15 +97,19 @@ def addPatient(request):
 
         caretaker = Caretakers.objects.filter(caretaker_id=request.user.id).first()
 
-        caretaker.patient_ids += [patient.patient_id]
+        if caretaker.patient_ids:
+            caretaker.patient_ids += [patient.patient_id]
+        else:
+            caretaker.patient_ids = [patient.patient_id]
 
         caretaker.save()
 
-    elif request.user.is_authenticated and request.user.user_type == "caretaker":
+    if request.user.is_authenticated and request.user.user_type == "caretaker":
         caretaker = Caretakers.objects.filter(caretaker_id=request.user.id).first()
         patient_ids = caretaker.patient_ids
-        all_patients = Patients.objects.filter(patient_id__in=patient_ids)
-
+        all_patients = []
+        if patient_ids:
+            all_patients = Patients.objects.filter(patient_id__in=patient_ids)
         return render(request, "add-patient.html", {"all_patients":all_patients})
     
     elif request.user.is_authenticated and request.user.user_type == "patient":
@@ -137,12 +140,12 @@ def dashboard(request):
     if request.user.is_authenticated and request.user.user_type == "caretaker":
         caretaker = Caretakers.objects.filter(caretaker_id=request.user.id).first()
         patient_ids = caretaker.patient_ids
-        all_patients = Patients.objects.filter(patient_id__in=patient_ids)
-        if all_patients:
-            return render(request, "dashboard.html", {"all_patients": all_patients})
-        else:
-            messages.error(request, "Please add atleast one patient first!")
-            return HttpResponseRedirect(reverse("addPatient"))
+        if patient_ids:
+            all_patients = Patients.objects.filter(patient_id__in=patient_ids)
+            if all_patients:
+                return render(request, "dashboard.html", {"all_patients": all_patients})
+        messages.error(request, "Please add atleast one patient first!")
+        return HttpResponseRedirect(reverse("addPatient"))
     elif request.user.is_authenticated and request.user.user_type == "patient":
         return render(request, "dashboard.html")
     else:
@@ -171,7 +174,7 @@ def updatePatientInfo(request):
         patient = Patients.objects.filter(patient_id=patient_id).first()
         caretaker = Caretakers.objects.filter(caretaker_id=request.user.id).first()
         patient_ids = caretaker.patient_ids
-        if patient_id not in patient_ids:
+        if int(patient_id) not in patient_ids:
             messages.error(request, "Sorry you're not the caretaker of this patient!")
             return HttpResponseRedirect(reverse("addPatient"))
         
@@ -183,13 +186,13 @@ def updatePatientInfo(request):
         edited_safe_center_long = request.POST.get("editSafeLong")
         edited_safe_radius_meters = request.POST.get("editSafeRad")
 
-        patient.first_name=edited_first_name,
-        patient.last_name=edited_last_name,
-        patient.age=edited_age,
-        patient.gender=edited_gender,
-        patient.safe_center_lat=edited_safe_center_lat,
-        patient.safe_center_long=edited_safe_center_long,
-        patient.safe_radius_meters=edited_safe_radius_meters,
+        patient.first_name=edited_first_name
+        patient.last_name=edited_last_name
+        patient.age=edited_age
+        patient.gender=edited_gender
+        patient.safe_center_lat=edited_safe_center_lat
+        patient.safe_center_long=edited_safe_center_long
+        patient.safe_radius_meters=edited_safe_radius_meters
 
         # Save
         patient.save()
